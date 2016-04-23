@@ -16,15 +16,19 @@
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:id="@+id/et_originPos"/>
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:id="@+id/et_destPos"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="OK"/>
+            android:text="OK"
+            android:id="@+id/bt_findDirection"
+            android:onClick="bt_findDirection_Clicked"/>
     </LinearLayout>
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"

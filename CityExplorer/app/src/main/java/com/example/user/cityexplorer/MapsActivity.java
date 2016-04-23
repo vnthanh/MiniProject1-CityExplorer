@@ -1,6 +1,7 @@
 package com.example.user.cityexplorer;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.nfc.Tag;
 import android.os.AsyncTask;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.AutocompleteFilter;
@@ -22,6 +24,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -80,6 +83,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         et_dest = (EditText) findViewById(R.id.et_destPos);
     }
 
+    ArrayList<Marker> markerList = new ArrayList<>(); // List of marker for later use
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -87,12 +91,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         for(int i=0;i<Places.size();i++)
         {
-            mMap.addMarker(new MarkerOptions().position(Places.get(i)).title("Place:"+ i));
+            markerList.add(mMap.addMarker(new MarkerOptions().position(Places.get(i)).title("Place:"+ i))); // add marker to list for later use
         }
 
-        mMap.animateCamera(CameraUpdateFactory.zoomBy(20));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(Places.get(0)));
+        CameraPosition camPos = new CameraPosition(Places.get(0),15,90,30);
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
 
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                String text;
+                /*String markerPos = marker.getPosition().toString();*/
+
+                if (marker == markerList.get(4))
+                {
+                    text = "This is a park";
+                }
+                else
+                {
+                    text = "This is a place";;
+                }
+
+                Intent intent = new Intent(MapsActivity.this,ScrollingActivity.class);
+                intent.putExtra("text",text);
+                startActivity(intent);
+
+                return true;
+            }
+        });
     }
 
     public void bt_findDirection_Clicked(View view)

@@ -7,9 +7,13 @@ import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,8 +56,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     //ArrayList<LatLng> Places = new ArrayList<>();
     ArrayList<com.example.user.cityexplorer.Place> PlacesFromFile = new ArrayList<>();
+    EditText et_origin, et_dest;
 
-    EditText et_origin,et_dest;
+    private ListView mDrawerList;
+    private ArrayAdapter<String> mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +74,49 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         et_origin = (EditText) findViewById(R.id.et_originPos);
         et_dest = (EditText) findViewById(R.id.et_destPos);
+
+
+        mDrawerList = (ListView) findViewById(R.id.navList);
+        addDrawerItems();
+    }
+
+    // Grab result sen back from PlacesActivity
+    private static final  int REQ_CODE = 123;
+
+    private void addDrawerItems() {
+        String[] NavArray = {"Places", "Bookmark", "Your places"};
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, NavArray);
+        mDrawerList.setAdapter(mAdapter);
+
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                //Toast.makeText(MapsActivity.this, String.valueOf(position), Toast.LENGTH_SHORT).show();
+                if (position == 0) {
+                    Intent intent = new Intent(MapsActivity.this, PlacesActivity.class);
+                    startActivityForResult(intent,REQ_CODE);
+                }
+            }
+        });
+    }
+    // Grab back result from PlacesAcvtivity
+    protected void onActivityResult(int requestCode,
+                                    int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        // Close drawer (left-side drawer -> close visually)
+        DrawerLayout dl = (DrawerLayout) findViewById(R.id.drawer_layout);
+        dl.closeDrawers();
+
+        if (requestCode == REQ_CODE) {
+            // came back from SecondActivity
+            int placeId = intent.getIntExtra("buttonClickedId",-1);
+
+            // got back data (place id, button id -> reset map to display that place)
+            CameraPosition camPos = new CameraPosition(PlacesFromFile.get(placeId).postion, 15, 50, 30);
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
+        }
     }
 
     @Override
@@ -75,12 +124,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add marker for all places loaded from file
-        for(int i=0;i<PlacesFromFile.size();i++)
-        {
+        for (int i = 0; i < PlacesFromFile.size(); i++) {
             mMap.addMarker(new MarkerOptions().position(PlacesFromFile.get(i).postion).title(PlacesFromFile.get(i).name));
         }
 
-        CameraPosition camPos = new CameraPosition(PlacesFromFile.get(0).postion,15,90,30);
+        CameraPosition camPos = new CameraPosition(PlacesFromFile.get(0).postion, 15, 90, 30);
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -88,17 +136,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onMarkerClick(Marker marker) {
 
                 String name = marker.getTitle().toString();
-                Intent intent = new Intent(MapsActivity.this,ScrollingActivity.class);
+                Intent intent = new Intent(MapsActivity.this, ScrollingActivity.class);
 
 
-                for(int i=0;i<PlacesFromFile.size();i++)
-                {
-                    if(name.equals(PlacesFromFile.get(i).name))
-                    {
-                        intent.putExtra("name",PlacesFromFile.get(i).name);
-                        intent.putExtra("phone",PlacesFromFile.get(i).phone);
-                        intent.putExtra("website",PlacesFromFile.get(i).website);
-                        intent.putExtra("description",PlacesFromFile.get(i).description);
+                for (int i = 0; i < PlacesFromFile.size(); i++) {
+                    if (name.equals(PlacesFromFile.get(i).name)) {
+                        intent.putExtra("name", PlacesFromFile.get(i).name);
+                        intent.putExtra("phone", PlacesFromFile.get(i).phone);
+                        intent.putExtra("website", PlacesFromFile.get(i).website);
+                        intent.putExtra("description", PlacesFromFile.get(i).description);
                     }
                 }
 
@@ -109,13 +155,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    public void bt_findDirection_Clicked(View view){
-       // TODO:
+    public void bt_findDirection_Clicked(View view) {
+        // TODO:
     }
 
-
-    public void LoadPlacesFromFile()
-    {
+    public void LoadPlacesFromFile() {
         com.example.user.cityexplorer.Place tempPlace;
         LatLng tempPosition;
         double tempLat, tempLng; // Lat and Lng
@@ -124,26 +168,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String tempWebsite;
         String tempDes;
 
-        Scanner scan  = new Scanner(getResources().openRawResource(R.raw.places));
+        Scanner scan = new Scanner(getResources().openRawResource(R.raw.places));
 
         // Be carefull , scanner type: double, int, -> mismatch bug
         int nPlaces = scan.nextInt();
 
-        for(int i=0;i<nPlaces;i++)
-        {
+        for (int i = 0; i < nPlaces; i++) {
             tempLat = scan.nextDouble();
             tempLng = scan.nextDouble();
-            tempPosition = new LatLng(tempLat,tempLng);
+            tempPosition = new LatLng(tempLat, tempLng);
             scan.nextLine();
             tempName = scan.nextLine();
             tempPhone = scan.nextLine();
             tempWebsite = scan.nextLine();
             tempDes = scan.nextLine();
 
-            tempPlace = new com.example.user.cityexplorer.Place(tempPosition,tempName,tempPhone,tempWebsite,tempDes);
+            tempPlace = new com.example.user.cityexplorer.Place(tempPosition, tempName, tempPhone, tempWebsite, tempDes);
             PlacesFromFile.add(tempPlace);
         }
 
         scan.close();
     }
+
 }

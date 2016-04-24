@@ -77,7 +77,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Add marker for all places loaded from file
         for(int i=0;i<PlacesFromFile.size();i++)
         {
-            mMap.addMarker(new MarkerOptions().position(PlacesFromFile.get(i).postion).title("Place:"+ i));
+            mMap.addMarker(new MarkerOptions().position(PlacesFromFile.get(i).postion).title(PlacesFromFile.get(i).name));
         }
 
         CameraPosition camPos = new CameraPosition(PlacesFromFile.get(0).postion,15,90,30);
@@ -87,13 +87,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                String text;
-                /*String markerPos = marker.getPosition().toString();*/
-
-                text = marker.getTitle().toString();
-
+                String name = marker.getTitle().toString();
                 Intent intent = new Intent(MapsActivity.this,ScrollingActivity.class);
-                intent.putExtra("text",text);
+
+
+                for(int i=0;i<PlacesFromFile.size();i++)
+                {
+                    if(name.equals(PlacesFromFile.get(i).name))
+                    {
+                        intent.putExtra("name",PlacesFromFile.get(i).name);
+                        intent.putExtra("phone",PlacesFromFile.get(i).phone);
+                        intent.putExtra("website",PlacesFromFile.get(i).website);
+                        intent.putExtra("description",PlacesFromFile.get(i).description);
+                    }
+                }
+
                 startActivity(intent);
 
                 return true;

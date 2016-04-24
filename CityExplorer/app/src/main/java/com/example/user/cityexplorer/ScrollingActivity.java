@@ -1,6 +1,9 @@
 package com.example.user.cityexplorer;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,18 +11,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
+
+import java.lang.reflect.Field;
 
 public class ScrollingActivity extends AppCompatActivity {
 
     Button bt_Call,bt_GoWeb,bt_Bookmark;
+    ImageView iv_PlaceImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -52,5 +61,34 @@ public class ScrollingActivity extends AppCompatActivity {
 
         bt_Call.setText("Call: " + phone);
         bt_GoWeb.setText("Go to Web: " + website);
+
+
+        // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   Load image to image view by place name - place image name
+        iv_PlaceImage = (ImageView) findViewById(R.id.iv_PlaceImage);
+        // Process name and get res id, set
+        String placeNameToGetImage = PlaceNameStringProcess(name);
+        int picId = getResources().getIdentifier(placeNameToGetImage, "drawable", getApplicationContext().getPackageName());
+        iv_PlaceImage.setImageResource(picId);
     }
+
+    // Process: clear space, toLowercase to get place image from res/drawable
+    public String PlaceNameStringProcess(String before){
+        String after = before.replaceAll(" ","");
+        after = after.toLowerCase(); // Note: It doesn't work because strings are immutable. You need to reassign
+        return after;
+    }
+
+    // Transform string to res id
+    public static int getResId(String resName, Class<?> c) {
+
+        try {
+            Field idField = c.getDeclaredField(resName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+
 }

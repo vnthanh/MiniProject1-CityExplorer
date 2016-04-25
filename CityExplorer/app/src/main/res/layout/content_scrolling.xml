@@ -22,12 +22,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/bt_Call"
-                android:text="Call"/>
+                android:text="Call"
+                android:onClick="bt_Call_Clicked"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/bt_GoWeb"
-                android:text="Go Web"/>
+                android:text="Go Web"
+                android:onClick="bt_GoWeb_Clicked"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

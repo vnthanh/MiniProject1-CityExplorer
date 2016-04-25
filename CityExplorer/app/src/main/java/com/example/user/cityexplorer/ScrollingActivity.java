@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +35,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
     Button bt_Call,bt_GoWeb,bt_Bookmark;
     ImageView iv_PlaceImage;
+    String phoneNumber, website;
 
     // Load from file again, entire places info
     ArrayList<Place> PlacesFromFile = new ArrayList<>();
@@ -65,15 +68,16 @@ public class ScrollingActivity extends AppCompatActivity {
         TextView tv = (TextView) findViewById(R.id.ScrollActText);
         tv.setText(description);
 
-        String phone = intent.getStringExtra("phone");
-        String website = intent.getStringExtra("website");
+        // Declare outside
+        phoneNumber = intent.getStringExtra("phone");
+        website = intent.getStringExtra("website");
 
         bt_Call = (Button) findViewById(R.id.bt_Call);
         bt_GoWeb = (Button) findViewById(R.id.bt_GoWeb);
         bt_Bookmark = (Button) findViewById(R.id.bt_Bookmark);
 
-        bt_Call.setText("Call: " + phone);
-        bt_GoWeb.setText("Go to Web: " + website);
+        bt_Call.setText("Call: " + phoneNumber);
+        bt_GoWeb.setText("Check out Website");
 
 
         // xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx   Load image to image view by place name - place image name
@@ -193,5 +197,19 @@ public class ScrollingActivity extends AppCompatActivity {
         }
 
         super.onStop();
+    }
+
+    public void bt_Call_Clicked(View view) {
+        // Call right-away, not dial
+        Uri number = Uri.parse("tel:"+phoneNumber);
+        Intent callIntent = new Intent(Intent.ACTION_CALL, number);
+        //callIntent.setData(Uri.parse("tel:"+phoneNumber));
+        startActivity(callIntent); // should check permission
+    }
+
+    public void bt_GoWeb_Clicked(View view) {
+        Uri webpage = Uri.parse("http://"+website);
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
+        startActivity(webIntent);
     }
 }

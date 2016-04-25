@@ -132,6 +132,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         DrawerLayout dl = (DrawerLayout) findViewById(R.id.drawer_layout);
         dl.closeDrawers();
 
+        if(intent == null) return; // do nothing, in case: in second act, press "hard back"
+
         if (requestCode == REQ_CODE) {
             // came back from SecondActivity
             int placeId = intent.getIntExtra("buttonClickedId",-1);

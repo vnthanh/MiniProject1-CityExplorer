@@ -56,7 +56,8 @@ public class ScrollingActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // disable this line : clear top back button, press back (on device) now doesn't reload MapsAct anymore
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Intent intent = getIntent();
         String name = intent.getStringExtra("name");

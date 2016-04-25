@@ -29,7 +29,6 @@ public class PlacesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places);
 
-
         AssetManager am = this.getAssets();
         try {
             LoadPlacesFromFile(am.open("places.txt")); // Load from file and store in ArrayList<Place>

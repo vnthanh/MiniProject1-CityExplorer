@@ -19,23 +19,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/et_originPos"/>
+                android:id="@+id/et_SearchKeyWord"
+                android:layout_weight="1"/>
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/et_destPos"/>
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="OK"
-                android:id="@+id/bt_findDirection"
-                android:onClick="bt_findDirection_Clicked"/>
+                android:text="Search"
+                android:id="@+id/bt_Search"
+                android:onClick="bt_Search_Clicked"
+                android:layout_weight="3"/>
         </LinearLayout>
 
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"

@@ -57,7 +57,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     //ArrayList<LatLng> Places = new ArrayList<>();
     ArrayList<com.example.user.cityexplorer.Place> PlacesFromFile = new ArrayList<>();
-    EditText et_origin, et_dest;
+    EditText et_SearchKeyWord;
 
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
@@ -78,8 +78,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             e.printStackTrace();
         }
 
-        et_origin = (EditText) findViewById(R.id.et_originPos);
-        et_dest = (EditText) findViewById(R.id.et_destPos);
+        et_SearchKeyWord = (EditText) findViewById(R.id.et_SearchKeyWord);
+        //et_dest = (EditText) findViewById(R.id.et_destPos);
 
 
         mDrawerList = (ListView) findViewById(R.id.navList);
@@ -167,8 +167,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    public void bt_findDirection_Clicked(View view) {
-        // TODO:
+    public void bt_Search_Clicked(View view) {
+        // If place name found -> animate camera to that place
+        String keyword = et_SearchKeyWord.getText().toString();
+        for(int i=0;i<PlacesFromFile.size();i++)
+        {
+            if(keyword.equals(PlacesFromFile.get(i).name)){
+                CameraPosition camPos = new CameraPosition(PlacesFromFile.get(i).postion, 15, 90, 30);
+                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
+                return;
+            }
+        }
+        // not found
+        Toast.makeText(MapsActivity.this, "Places not found!", Toast.LENGTH_SHORT).show();
     }
 
     public void LoadPlacesFromFile(InputStream inputStream) {

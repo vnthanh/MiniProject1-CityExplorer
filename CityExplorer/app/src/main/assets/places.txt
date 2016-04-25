@@ -1,4 +1,4 @@
-3
+5
 10.772883
 106.697980
 Cho Ben Thanh
@@ -19,4 +19,18 @@ Ben Nha Rong
 1009
 www.bennharong.com
 Ben Nha Rong : Ben Nha Rong (Ho Chi Minh museum), one of Vietnam popular destinations, was the first largest trading harbor of Saigon (the old name of Ho Chi Minh City) in 1862. The main purpose of building this harbor is meeting the demand of transportation among the colonized Vietnam and the world. In September 1979, the People’s Committee of Ho Chi Minh City reformed it into Ho Chi Minh museum branch in a city, but does not change the name.Similarity with some other French architectures in Vietnam, the harbor was designed which combining the French style and Vietnamese style. The main building was constructed following the French characteristic, but there are two Vietnamese dragon-shaped statues on the top of roof. You can easily find out the similarity detail in the architecture of Vietnamese traditional temples or pagodas.  It is said that the name of the wharf come from this decoration.
+false
+10.780100
+106.699016
+Nha Tho Duc Ba
+1999
+www.nhathoducba.com
+Nha Tho Duc Ba : In 1959, Bishop Joseph Pham Van Thien, whose jurisdiction included Saigon parish, attended the Marian Congress held in Vatican and ordered a statue of Our Lady of Peace made with granite in Rome. When the statue arrived in Saigon on 16 February 1959, Bishop Pham Van Thien held a ceremony to install the statue on the empty base and presented the title of "Regina Pacis". It was the same bishop who wrote the prayers "Notre-Dame bless the peace to Vietnam". The next day, Cardinal Aganianian came from Rome to chair the closing ceremony of the Marian Congress and solemnly chaired the ceremony for the statue, thus the cathedral was then-on called Notre-Dame Cathedral.
+false
+10.767140
+106.640752
+Cong Vien Van Hoa Dam Sen
+1000
+www.damsenpark.com
+Cong Vien Van Hoa Dam Sen : 30 years ago. Dam Sen CVVH was a wild rice marsh area with dunes spinach, cilantro, bind dense vegetation, as well as a container of social evils. On the day of 02.15.1976, the mobilization of thousands of millions of socialist workers to execute the call of the City Commission - City People's Committee, "Let's build the cultural city park 3 adults, one in Binh Tien, one in Tan Binh and one in Dam Sen ". Park was started so gradually been converted into a pool cleaner, with airy landscapes.
 false

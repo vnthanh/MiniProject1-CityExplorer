@@ -36,6 +36,13 @@
                 android:layout_weight="3"/>
         </LinearLayout>
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:id="@+id/bt_PlaceInfo"
+            android:onClick="bt_PlaceInfo_Clicked"/>
+
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:map="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"

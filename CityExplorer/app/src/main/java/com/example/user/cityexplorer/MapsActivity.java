@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -67,6 +68,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
 
+    Button bt_PlaceInfo; // Only display when marker is clicked
+    String markerClickedTitle; // To know which marker is click, then press button for info
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +93,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mDrawerList = (ListView) findViewById(R.id.navList);
         addDrawerItems();
+
+        bt_PlaceInfo = (Button) findViewById(R.id.bt_PlaceInfo);
     }
 
     // Grab result sen back from PlacesActivity
@@ -151,13 +157,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-
                 if(marker.getTitle().equals("You are here")) return false; // handle myLocation marker, do nothing
 
-                String name = marker.getTitle().toString();
+                /*String name = marker.getTitle().toString();
                 Intent intent = new Intent(MapsActivity.this, ScrollingActivity.class);
-
-
                 for (int i = 0; i < PlacesFromFile.size(); i++) {
                     if (name.equals(PlacesFromFile.get(i).name)) {
                         intent.putExtra("name", PlacesFromFile.get(i).name);
@@ -166,10 +169,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         intent.putExtra("description", PlacesFromFile.get(i).description);
                     }
                 }
-
                 startActivity(intent);
+                return true;*/
+                marker.showInfoWindow(); // Show marker title
+                bt_PlaceInfo.setVisibility(View.VISIBLE);
+                bt_PlaceInfo.setText("More info : " + marker.getTitle());
 
+                markerClickedTitle = marker.getTitle().toString();
                 return true;
+            }
+        });
+
+
+
+        // Handle to show Place Info Button, hide when clicking map
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                bt_PlaceInfo.setVisibility(View.GONE);
             }
         });
 
@@ -185,7 +202,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
-        
+
         mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
             public boolean onMyLocationButtonClick() {
@@ -204,6 +221,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
+
 
 
     public void bt_Search_Clicked(View view) {
@@ -261,4 +279,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         scan.close();
     }
 
+    public void bt_PlaceInfo_Clicked(View view) {
+       //if(markerClicke dTitle.equals("You are here")) return false; // handle myLocation marker, do nothing
+
+        String name = markerClickedTitle;
+        Intent intent = new Intent(MapsActivity.this, ScrollingActivity.class);
+
+
+        for (int i = 0; i < PlacesFromFile.size(); i++) {
+            if (name.equals(PlacesFromFile.get(i).name)) {
+                intent.putExtra("name", PlacesFromFile.get(i).name);
+                intent.putExtra("phone", PlacesFromFile.get(i).phone);
+                intent.putExtra("website", PlacesFromFile.get(i).website);
+                intent.putExtra("description", PlacesFromFile.get(i).description);
+            }
+        }
+
+        startActivity(intent);
+
+    }
 }

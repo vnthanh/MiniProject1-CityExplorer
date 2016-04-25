@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
@@ -175,6 +176,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if(keyword.equals(PlacesFromFile.get(i).name)){
                 CameraPosition camPos = new CameraPosition(PlacesFromFile.get(i).postion, 15, 90, 30);
                 mMap.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
+
+                // Play sound if found
+                MediaPlayer mp = MediaPlayer.create(this, R.raw.sound);
+                mp.start();
                 return;
             }
         }

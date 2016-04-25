@@ -68,7 +68,7 @@
         </activity>
         <activity
             android:name=".AddPlacesActivity"
-            android:label="@string/title_activity_add_places"
+            android:label="Add Your Place"
             android:parentActivityName=".MapsActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

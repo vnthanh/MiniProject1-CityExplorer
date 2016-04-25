@@ -2,6 +2,7 @@ package com.example.user.cityexplorer;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -15,14 +16,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.w3c.dom.Text;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class ScrollingActivity extends AppCompatActivity {
 
     Button bt_Call,bt_GoWeb,bt_Bookmark;
     ImageView iv_PlaceImage;
+
+    // Load from file again, entire places info
+    ArrayList<Place> PlacesFromFile = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +82,16 @@ public class ScrollingActivity extends AppCompatActivity {
         String placeNameToGetImage = PlaceNameStringProcess(name);
         int picId = getResources().getIdentifier(placeNameToGetImage, "drawable", getApplicationContext().getPackageName());
         iv_PlaceImage.setImageResource(picId);
+
+
+        // ======================== for bookmark check-> dummy code : load all, write all
+        AssetManager am = this.getAssets();
+        try {
+            LoadPlacesFromFile(am.open("places.txt")); // Load from file and store in ArrayList<Place>
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     // Process: clear space, toLowercase to get place image from res/drawable
@@ -90,5 +113,85 @@ public class ScrollingActivity extends AppCompatActivity {
         }
     }
 
+    // Save file again with bookmark update
+    public void bt_Bookmark_Clicked(View view) {
+        // Get which place selected from parent Activity
+        Intent intent = getIntent();
+        // Place name? should i use an id?
+        String name = intent.getStringExtra("name");
 
+        // Re-write file at the specific place : isBookmark line
+        for(int i=0;i<PlacesFromFile.size();i++){
+            if(name.equals(PlacesFromFile.get(i).name) && PlacesFromFile.get(i).isBookmark==false){
+                // reset its bookmark (to true //dummy)
+                PlacesFromFile.get(i).isBookmark = true;
+            }
+        }
+    }
+
+    public void LoadPlacesFromFile(InputStream inputStream)
+    {
+        com.example.user.cityexplorer.Place tempPlace;
+        LatLng tempPosition;
+        double tempLat, tempLng; // Lat and Lng
+        String tempName;
+        String tempPhone;
+        String tempWebsite;
+        String tempDes;
+        boolean tempBookmark;
+
+        Scanner scan  = new Scanner(inputStream);
+
+        // Be carefull , scanner type: double, int, -> mismatch bug
+        int nPlaces = scan.nextInt();
+
+        for(int i=0;i<nPlaces;i++)
+        {
+            tempLat = scan.nextDouble();
+            tempLng = scan.nextDouble();
+            tempPosition = new LatLng(tempLat,tempLng);
+            scan.nextLine();
+            tempName = scan.nextLine();
+            tempPhone = scan.nextLine();
+            tempWebsite = scan.nextLine();
+            tempDes = scan.nextLine();
+            tempBookmark = scan.nextBoolean();
+
+            tempPlace = new com.example.user.cityexplorer.Place(tempPosition,tempName,tempPhone,tempWebsite,tempDes,tempBookmark);
+            PlacesFromFile.add(tempPlace);
+        }
+
+        scan.close();
+    }
+
+    // write file when after all
+    @Override
+    protected void onStop() {
+        // Dummy code: write all each time, even when nothing happen (bookmark not clicked)
+        try {
+
+            PrintStream output = new PrintStream(openFileOutput("places.txt",MODE_PRIVATE));
+            // solution: only bookmark load from app file dir, ScrollAct write to this dir too
+            // FUCK YOU: CANT WRITE RES FILE xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+            output.println(PlacesFromFile.size());
+
+            for(int i=0;i<PlacesFromFile.size();i++)
+            {
+                output.println(PlacesFromFile.get(i).postion.latitude);
+                output.println(PlacesFromFile.get(i).postion.latitude);
+                output.println(PlacesFromFile.get(i).name);
+                output.println(PlacesFromFile.get(i).phone);
+                output.println(PlacesFromFile.get(i).website);
+                output.println(PlacesFromFile.get(i).description);
+                output.println(PlacesFromFile.get(i).isBookmark);
+            }
+
+            output.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        super.onStop();
+    }
 }

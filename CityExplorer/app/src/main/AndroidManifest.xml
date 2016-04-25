@@ -46,7 +46,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="MapsActivity" />
         </activity>
-        <activity android:name=".PlacesActivity"></activity>
+        <activity android:name=".PlacesActivity" />
+        <activity android:name=".BookmarkActivity"></activity>
     </application>
 
 </manifest>

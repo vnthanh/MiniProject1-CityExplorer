@@ -1,14 +1,22 @@
-2
+3
 10.772883
 106.697980
 Cho Ben Thanh
 1080
 www.chobenthanh.com
 Cho Ben Thanh : The market developed from informal markets created by early 17th century street vendors gathering together near the Saigon River. The market was formally established by the French colonial powers after taking over the Gia Dinh citadel in 1859 (see Citadel of Saigon). This market was destroyed by fire in 1870 and rebuilt to become Saigon's largest market. In 1912 the market was moved to a new building and called the New Ben Thanh Market to distinguish over its predecessor. The building was renovated in 1985.
+false
 10.777454
 106.695478
 Dinh Doc Lap
 1081
 www.dinhdoclap.com
 Dinh Doc Lap : Independence Palace (Dinh Doc Lap), also known as Reunification Palace (Vietnamese: Dinh Thong Nhat), built on the site of the former Norodom Palace, is a landmark in Ho Chi Minh City, Vietnam. It was designed by architect Ngo Viet Thu and was the home and workplace of the President of South Vietnam during the Vietnam War. It was the site of the end of the Vietnam War during the Fall of Saigon on April 30, 1975, when a North Vietnamese Army tank crashed through its gates.
-
+true
+10.768587
+106.706783
+Ben Nha Rong
+1009
+www.bennharong.com
+Ben Nha Rong : Ben Nha Rong (Ho Chi Minh museum), one of Vietnam popular destinations, was the first largest trading harbor of Saigon (the old name of Ho Chi Minh City) in 1862. The main purpose of building this harbor is meeting the demand of transportation among the colonized Vietnam and the world. In September 1979, the People’s Committee of Ho Chi Minh City reformed it into Ho Chi Minh museum branch in a city, but does not change the name.Similarity with some other French architectures in Vietnam, the harbor was designed which combining the French style and Vietnamese style. The main building was constructed following the French characteristic, but there are two Vietnamese dragon-shaped statues on the top of roof. You can easily find out the similarity detail in the architecture of Vietnamese traditional temples or pagodas.  It is said that the name of the wharf come from this decoration.
+false

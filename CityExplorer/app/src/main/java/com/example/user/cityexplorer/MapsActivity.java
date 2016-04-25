@@ -2,6 +2,7 @@ package com.example.user.cityexplorer;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.nfc.Tag;
 import android.os.AsyncTask;
@@ -70,7 +71,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        LoadPlacesFromFile(); // Load from file and store in ArrayList<Place>
+        AssetManager am = this.getAssets();
+        try {
+            LoadPlacesFromFile(am.open("places.txt")); // Load from file and store in ArrayList<Place>
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         et_origin = (EditText) findViewById(R.id.et_originPos);
         et_dest = (EditText) findViewById(R.id.et_destPos);
@@ -81,7 +87,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     // Grab result sen back from PlacesActivity
-    private static final  int REQ_CODE = 123;
+    private static final  int REQ_CODE = 123; //============================== CODE
 
     private void addDrawerItems() {
         String[] NavArray = {"Places", "Bookmark", "Your places"};
@@ -92,15 +98,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                //Toast.makeText(MapsActivity.this, String.valueOf(position), Toast.LENGTH_SHORT).show();
+                // Go to (start) PlaceActivity
                 if (position == 0) {
                     Intent intent = new Intent(MapsActivity.this, PlacesActivity.class);
                     startActivityForResult(intent,REQ_CODE);
                 }
+                // Go to (start) BookmarkActivity
+                if(position == 1){
+                    Intent intent = new Intent(MapsActivity.this, BookmarkActivity.class);
+                    startActivityForResult(intent,REQ_CODE);
+                }
+
             }
         });
     }
-    // Grab back result from PlacesAcvtivity
+    // Grab back result from PlacesAcvtivity and BookmarkActivity
     protected void onActivityResult(int requestCode,
                                     int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -159,7 +171,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // TODO:
     }
 
-    public void LoadPlacesFromFile() {
+    public void LoadPlacesFromFile(InputStream inputStream) {
         com.example.user.cityexplorer.Place tempPlace;
         LatLng tempPosition;
         double tempLat, tempLng; // Lat and Lng
@@ -167,10 +179,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String tempPhone;
         String tempWebsite;
         String tempDes;
-
-        Scanner scan = new Scanner(getResources().openRawResource(R.raw.places));
+        boolean tempBookmark;
+        // input Stream from assets
+        Scanner scan = new Scanner(inputStream);
 
         // Be carefull , scanner type: double, int, -> mismatch bug
+
+        /*String n = scan.nextLine();
+        int nPlaces = Integer.parseInt(n);*/
         int nPlaces = scan.nextInt();
 
         for (int i = 0; i < nPlaces; i++) {
@@ -182,8 +198,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             tempPhone = scan.nextLine();
             tempWebsite = scan.nextLine();
             tempDes = scan.nextLine();
+            tempBookmark = scan.nextBoolean();
 
-            tempPlace = new com.example.user.cityexplorer.Place(tempPosition, tempName, tempPhone, tempWebsite, tempDes);
+            tempPlace = new com.example.user.cityexplorer.Place(tempPosition, tempName, tempPhone, tempWebsite, tempDes,tempBookmark);
             PlacesFromFile.add(tempPlace);
         }
 

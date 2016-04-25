@@ -32,6 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/bt_Bookmark"
+                android:onClick="bt_Bookmark_Clicked"
                 android:text="Bookmark"/>
 
         </LinearLayout>

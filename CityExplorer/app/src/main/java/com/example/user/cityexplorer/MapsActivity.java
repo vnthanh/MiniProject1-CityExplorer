@@ -1,12 +1,16 @@
 package com.example.user.cityexplorer;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Color;
+import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.nfc.Tag;
 import android.os.AsyncTask;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -148,6 +152,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public boolean onMarkerClick(Marker marker) {
 
+                if(marker.getTitle().equals("You are here")) return false; // handle myLocation marker, do nothing
+
                 String name = marker.getTitle().toString();
                 Intent intent = new Intent(MapsActivity.this, ScrollingActivity.class);
 
@@ -166,7 +172,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return true;
             }
         });
+
+        // Devices's GPS
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+        
+        mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                Log.e("Inside","Click part");
+                LatLng ll = new LatLng(mMap.getMyLocation().getLatitude(),mMap.getMyLocation().getLongitude());
+
+                mMap.addMarker(new MarkerOptions()
+                        .position(ll)
+                        .title("You are here")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.customicon)));
+
+                CameraPosition camPos = new CameraPosition(ll, 15, 90, 30);
+                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
+
+                return false;
+            }
+        });
     }
+
 
     public void bt_Search_Clicked(View view) {
         // If place name found -> animate camera to that place

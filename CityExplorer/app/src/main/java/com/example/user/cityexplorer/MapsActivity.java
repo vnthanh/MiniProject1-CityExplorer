@@ -207,18 +207,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
-            public boolean onMyLocationButtonClick() {
-                Log.e("Inside","Click part");
-                LatLng ll = new LatLng(mMap.getMyLocation().getLatitude(),mMap.getMyLocation().getLongitude());
+            public boolean onMyLocationButtonClick(){
+                // gps not activated exception
+                try{
+                    LatLng ll = new LatLng(mMap.getMyLocation().getLatitude(),mMap.getMyLocation().getLongitude());
 
-                mMap.addMarker(new MarkerOptions()
-                        .position(ll)
-                        .title("You are here")
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.customicon)));
+                    mMap.addMarker(new MarkerOptions()
+                            .position(ll)
+                            .title("You are here")
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.customicon)));
 
-                CameraPosition camPos = new CameraPosition(ll, 15, 90, 30);
-                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
+                    CameraPosition camPos = new CameraPosition(ll, 15, 90, 30);
+                    mMap.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
 
+                }catch (Exception e)
+                {
+                    Toast.makeText(MapsActivity.this, "GPS error(CityExplorer)", Toast.LENGTH_SHORT).show();
+                }
                 return false;
             }
         });

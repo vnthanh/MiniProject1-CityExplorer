@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -38,7 +41,7 @@ public class ScrollingActivity extends AppCompatActivity {
     String phoneNumber, website;
 
     // Load from file again, entire places info
-    ArrayList<Place> PlacesFromFile = new ArrayList<>();
+    ArrayList<Place> PlacesFromFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,15 +89,34 @@ public class ScrollingActivity extends AppCompatActivity {
         // Process name and get res id, set
         String placeNameToGetImage = PlaceNameStringProcess(name);
         int picId = getResources().getIdentifier(placeNameToGetImage, "drawable", getApplicationContext().getPackageName());
-        iv_PlaceImage.setImageResource(picId);
 
+        // Update: process added place image, store in external file
+        if(picId == 0){ // not found in internal
+            //getResources().getIdentifier(placeNameToGetImage,getFilesDir().toString(),getApplicationContext().getPackageName());
+            String photoPath = Environment.getExternalStorageDirectory() + "/" +placeNameToGetImage + ".png";
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap bitmap = BitmapFactory.decodeFile(photoPath, options);
+
+            iv_PlaceImage.setImageBitmap(bitmap); // image in external
+        }
+        else {
+            iv_PlaceImage.setImageResource(picId); // image inside (internal)
+        }
 
         // ======================== for bookmark check-> dummy code : load all, write all
         AssetManager am = this.getAssets();
+        // first time launch: check if there is a file in getFileDir, if not, open in assets
+        // Dummy code for BookMark Act and ScrollingAct only
         try {
-            LoadPlacesFromFile(am.open("places.txt")); // Load from file and store in ArrayList<Place>
+            PlacesFromFile = FileManager.LoadPlacesFromFile(openFileInput("places.txt")); // Load from file and store in ArrayList<Place>
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            try {
+                PlacesFromFile = FileManager.LoadPlacesFromFile(am.open("places.txt")); // if not found (not create) in fileDir, go on this file
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
 
     }
@@ -134,40 +156,6 @@ public class ScrollingActivity extends AppCompatActivity {
         }
     }
 
-    public void LoadPlacesFromFile(InputStream inputStream)
-    {
-        com.example.user.cityexplorer.Place tempPlace;
-        LatLng tempPosition;
-        double tempLat, tempLng; // Lat and Lng
-        String tempName;
-        String tempPhone;
-        String tempWebsite;
-        String tempDes;
-        boolean tempBookmark;
-
-        Scanner scan  = new Scanner(inputStream);
-
-        // Be carefull , scanner type: double, int, -> mismatch bug
-        int nPlaces = scan.nextInt();
-
-        for(int i=0;i<nPlaces;i++)
-        {
-            tempLat = scan.nextDouble();
-            tempLng = scan.nextDouble();
-            tempPosition = new LatLng(tempLat,tempLng);
-            scan.nextLine();
-            tempName = scan.nextLine();
-            tempPhone = scan.nextLine();
-            tempWebsite = scan.nextLine();
-            tempDes = scan.nextLine();
-            tempBookmark = scan.nextBoolean();
-
-            tempPlace = new com.example.user.cityexplorer.Place(tempPosition,tempName,tempPhone,tempWebsite,tempDes,tempBookmark);
-            PlacesFromFile.add(tempPlace);
-        }
-
-        scan.close();
-    }
 
     // write file when after all
     @Override
@@ -179,7 +167,7 @@ public class ScrollingActivity extends AppCompatActivity {
             // solution: only bookmark load from app file dir, ScrollAct write to this dir too
             // FUCK YOU: CANT WRITE RES FILE xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-            output.println(PlacesFromFile.size());
+            /*output.println(PlacesFromFile.size());
 
             for(int i=0;i<PlacesFromFile.size();i++)
             {
@@ -192,7 +180,8 @@ public class ScrollingActivity extends AppCompatActivity {
                 output.println(PlacesFromFile.get(i).isBookmark);
             }
 
-            output.close();
+            output.close();*/
+            FileManager.SavePlacesToFile(PlacesFromFile,output);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

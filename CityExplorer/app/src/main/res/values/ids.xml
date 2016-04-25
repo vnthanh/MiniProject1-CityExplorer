@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+        <!--app store nId max place-->
         <item type="id" name="place_button1" />
         <item type="id" name="place_button2" />
         <item type="id" name="place_button3" />
@@ -10,4 +11,14 @@
         <item type="id" name="place_button8" />
         <item type="id" name="place_button9" />
         <item type="id" name="place_button10" />
+        <item type="id" name="place_button11" />
+        <item type="id" name="place_button12" />
+        <item type="id" name="place_button13" />
+        <item type="id" name="place_button14" />
+        <item type="id" name="place_button15" />
+        <item type="id" name="place_button16" />
+        <item type="id" name="place_button17" />
+        <item type="id" name="place_button18" />
+        <item type="id" name="place_button19" />
+        <item type="id" name="place_button20" />
 </resources>

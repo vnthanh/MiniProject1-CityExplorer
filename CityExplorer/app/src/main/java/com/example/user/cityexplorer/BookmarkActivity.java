@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class BookmarkActivity extends AppCompatActivity {
 
     // Load from file again, entire places info
-    ArrayList<Place> PlacesFromFile = new ArrayList<>();
+    ArrayList<Place> PlacesFromFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +29,11 @@ public class BookmarkActivity extends AppCompatActivity {
         // first time launch: check if there is a file in getFileDir, if not, open in assets
         // Dummy code for BookMark Act and ScrollingAct only
         try {
-            LoadPlacesFromFile(openFileInput("places.txt")); // Load from file and store in ArrayList<Place>
+            PlacesFromFile = FileManager.LoadPlacesFromFile(openFileInput("places.txt")); // Load from file and store in ArrayList<Place>
         } catch (IOException e) {
             //e.printStackTrace();
             try {
-                LoadPlacesFromFile(am.open("places.txt")); // if not found (not create) in fileDir, go on this file
+                PlacesFromFile = FileManager.LoadPlacesFromFile(am.open("places.txt")); // if not found (not create) in fileDir, go on this file
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
@@ -73,41 +73,5 @@ public class BookmarkActivity extends AppCompatActivity {
             }
         }
     }
-
-    public void LoadPlacesFromFile(InputStream inputStream)
-    {
-        com.example.user.cityexplorer.Place tempPlace;
-        LatLng tempPosition;
-        double tempLat, tempLng; // Lat and Lng
-        String tempName;
-        String tempPhone;
-        String tempWebsite;
-        String tempDes;
-        boolean tempBookmark;
-
-        Scanner scan  = new Scanner(inputStream);
-
-        // Be carefull , scanner type: double, int, -> mismatch bug
-        int nPlaces = scan.nextInt();
-
-        for(int i=0;i<nPlaces;i++)
-        {
-            tempLat = scan.nextDouble();
-            tempLng = scan.nextDouble();
-            tempPosition = new LatLng(tempLat,tempLng);
-            scan.nextLine();
-            tempName = scan.nextLine();
-            tempPhone = scan.nextLine();
-            tempWebsite = scan.nextLine();
-            tempDes = scan.nextLine();
-            tempBookmark = scan.nextBoolean();
-
-            tempPlace = new com.example.user.cityexplorer.Place(tempPosition,tempName,tempPhone,tempWebsite,tempDes,tempBookmark);
-            PlacesFromFile.add(tempPlace);
-        }
-
-        scan.close();
-    }
-
 
 }

@@ -62,7 +62,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     //ArrayList<LatLng> Places = new ArrayList<>();
-    ArrayList<com.example.user.cityexplorer.Place> PlacesFromFile = new ArrayList<>();
+    ArrayList<com.example.user.cityexplorer.Place> PlacesFromFile;
     EditText et_SearchKeyWord;
 
     private ListView mDrawerList;
@@ -81,10 +81,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         AssetManager am = this.getAssets();
+        // first time launch: check if there is a file in getFileDir, if not, open in assets
+        // Dummy code for BookMark Act and ScrollingAct only
         try {
-            LoadPlacesFromFile(am.open("places.txt")); // Load from file and store in ArrayList<Place>
+            PlacesFromFile = FileManager.LoadPlacesFromFile(openFileInput("places.txt")); // Load from file and store in ArrayList<Place>
         } catch (IOException e) {
             e.printStackTrace();
+            try {
+                PlacesFromFile = FileManager.LoadPlacesFromFile(am.open("places.txt")); // if not found (not create) in fileDir, go on this file
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
 
         et_SearchKeyWord = (EditText) findViewById(R.id.et_SearchKeyWord);
@@ -119,6 +126,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Intent intent = new Intent(MapsActivity.this, BookmarkActivity.class);
                     startActivityForResult(intent,REQ_CODE);
                 }
+                // Go to (start) AddPlacesActivity
+                if(position == 2){
+                    Intent intent = new Intent(MapsActivity.this, AddPlacesActivity.class);
+                    startActivityForResult(intent,REQ_CODE);
+                }
 
             }
         });
@@ -128,6 +140,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
+        // Fix add place bug, not draw marker
         // Close drawer (left-side drawer -> close visually)
         DrawerLayout dl = (DrawerLayout) findViewById(R.id.drawer_layout);
         dl.closeDrawers();
@@ -137,7 +150,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (requestCode == REQ_CODE) {
             // came back from SecondActivity
             int placeId = intent.getIntExtra("buttonClickedId",-1);
-
             // got back data (place id, button id -> reset map to display that place)
             CameraPosition camPos = new CameraPosition(PlacesFromFile.get(placeId).postion, 15, 50, 30);
             mMap.moveCamera(CameraUpdateFactory.newCameraPosition(camPos));
@@ -250,7 +262,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Toast.makeText(MapsActivity.this, "Places not found!", Toast.LENGTH_SHORT).show();
     }
 
-    public void LoadPlacesFromFile(InputStream inputStream) {
+    /*public void LoadPlacesFromFile(InputStream inputStream) {
+
         com.example.user.cityexplorer.Place tempPlace;
         LatLng tempPosition;
         double tempLat, tempLng; // Lat and Lng
@@ -264,8 +277,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Be carefull , scanner type: double, int, -> mismatch bug
 
-        /*String n = scan.nextLine();
-        int nPlaces = Integer.parseInt(n);*/
+        *//*String n = scan.nextLine();
+        int nPlaces = Integer.parseInt(n);*//*
         int nPlaces = scan.nextInt();
 
         for (int i = 0; i < nPlaces; i++) {
@@ -284,7 +297,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         scan.close();
-    }
+    }*/
 
     public void bt_PlaceInfo_Clicked(View view) {
        //if(markerClicke dTitle.equals("You are here")) return false; // handle myLocation marker, do nothing
@@ -305,4 +318,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(intent);
 
     }
+
+    /*@Override
+    protected void onRestart() {
+        super.onRestart();
+
+        // Reload again, to update when new place added
+        AssetManager am = this.getAssets();
+        // first time launch: check if there is a file in getFileDir, if not, open in assets
+        // Dummy code for BookMark Act and ScrollingAct only
+        try {
+            PlacesFromFile = FileManager.LoadPlacesFromFile(openFileInput("places.txt")); // Load from file and store in ArrayList<Place>
+        } catch (IOException e) {
+            //e.printStackTrace();
+            try {
+                PlacesFromFile = FileManager.LoadPlacesFromFile(am.open("places.txt")); // if not found (not create) in fileDir, go on this file
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }*/
 }

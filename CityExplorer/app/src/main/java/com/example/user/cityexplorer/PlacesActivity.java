@@ -22,7 +22,7 @@ import java.util.Scanner;
 public class PlacesActivity extends AppCompatActivity {
 
     // Load from file again, entire places info
-    ArrayList<Place> PlacesFromFile = new ArrayList<>();
+    ArrayList<Place> PlacesFromFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +30,17 @@ public class PlacesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_places);
 
         AssetManager am = this.getAssets();
+        // first time launch: check if there is a file in getFileDir, if not, open in assets
+        // Dummy code for BookMark Act and ScrollingAct only
         try {
-            LoadPlacesFromFile(am.open("places.txt")); // Load from file and store in ArrayList<Place>
+            PlacesFromFile = FileManager.LoadPlacesFromFile(openFileInput("places.txt")); // Load from file and store in ArrayList<Place>
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            try {
+                PlacesFromFile = FileManager.LoadPlacesFromFile(am.open("places.txt")); // if not found (not create) in fileDir, go on this file
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
 
         // Add scroll view, and ll inside wrap all orther view
@@ -68,7 +75,7 @@ public class PlacesActivity extends AppCompatActivity {
         }
     }
 
-    public void LoadPlacesFromFile(InputStream inputStream)
+    /*public void LoadPlacesFromFile(InputStream inputStream)
     {
         com.example.user.cityexplorer.Place tempPlace;
         LatLng tempPosition;
@@ -102,5 +109,5 @@ public class PlacesActivity extends AppCompatActivity {
         }
 
         scan.close();
-    }
+    }*/
 }
